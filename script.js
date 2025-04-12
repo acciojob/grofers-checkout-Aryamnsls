@@ -3,26 +3,33 @@ getSumBtn.append("Get Total Price");
 document.body.appendChild(getSumBtn);
 
 const getSum = () => {
-    // Get all price elements
-    const priceElements = document.querySelectorAll(".price");
-    
-    let total = 0;
-    priceElements.forEach((priceCell) => {
-        total += parseFloat(priceCell.textContent); // Convert text to number and add
-    });
+  const prices = document.querySelectorAll(".price");
+  let sum = 0;
 
-    // Create new row
-    const table = document.querySelector("table");
-    const totalRow = document.createElement("tr");
-    const totalCell = document.createElement("td");
+  prices.forEach(priceEl => {
+    const value = parseInt(priceEl.innerText) || 0;
+    sum += value;
+  });
 
-    // Set colspan to span both columns and display total
-    totalCell.setAttribute("colspan", "2");
-    totalCell.textContent = `Total Price: Rs ${total}`;
-    totalCell.style.fontWeight = "bold";
+  const table = document.querySelector("table");
 
-    totalRow.appendChild(totalCell);
-    table.appendChild(totalRow); // Append the new row to the table
+  // Remove previous total row if already added
+  const existingTotalRow = document.getElementById("ans-row");
+  if (existingTotalRow) {
+    existingTotalRow.remove();
+  }
+
+  // Create a new row and cell
+  const totalRow = document.createElement("tr");
+  totalRow.setAttribute("id", "ans-row");
+
+  const totalCell = document.createElement("td");
+  totalCell.setAttribute("id", "ans"); // required for Cypress test to detect it
+  totalCell.setAttribute("colspan", "2");
+  totalCell.innerText = sum;
+
+  totalRow.appendChild(totalCell);
+  table.appendChild(totalRow);
 };
 
 getSumBtn.addEventListener("click", getSum);
